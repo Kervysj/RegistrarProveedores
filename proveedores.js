@@ -1,48 +1,20 @@
 // ============================================
-// CONFIGURACIÓN - CAMBIA ESTO CON TU URL
-// ============================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/TU_ID_AQUI/exec';
-
-// ============================================
 // VARIABLES GLOBALES
 // ============================================
+let GOOGLE_SCRIPT_URL = localStorage.getItem('googleScriptUrl') || '';
 let providers = [];
 let editingId = null;
 let deletingId = null;
-let useLocalStorage = true;
+let useLocalStorage = !GOOGLE_SCRIPT_URL; // Usar localStorage si no hay URL
 
 // ============================================
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    loadProviders();
+    checkConnection();
     checkTheme();
+    loadProviders();
 });
-
-// ============================================
-// MODO OSCURO/CLARO
-// ============================================
-function toggleTheme() {
-    const body = document.body;
-    const btn = document.getElementById('theme-toggle');
-    body.classList.toggle('dark-mode');
-    if (body.classList.contains('dark-mode')) {
-        btn.textContent = '☀️ Modo Claro';
-        localStorage.setItem('theme', 'dark');
-    } else {
-        btn.textContent = '🌙 Modo Oscuro';
-        localStorage.setItem('theme', 'light');
-    }
-}
-
-function checkTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const btn = document.getElementById('theme-toggle');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (btn) btn.textContent = '☀️ Modo Claro';
-    }
-}
 
 // ============================================
 // VERIFICAR CONEXIÓN
@@ -53,10 +25,10 @@ function checkConnection() {
     const statusIcon = document.getElementById('status-icon');
     const btnDisconnect = document.getElementById('btn-disconnect');
 
-    if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== 'https://script.google.com/macros/s/TU_ID_AQUI/exec') {
+    if (GOOGLE_SCRIPT_URL) {
         if (connBar) connBar.classList.add('connected');
         if (connStatus) connStatus.textContent = '✅ Conectado a Google Sheets';
-        if (statusIcon) statusIcon.textContent = '️';
+        if (statusIcon) statusIcon.textContent = '☁️';
         if (btnDisconnect) btnDisconnect.style.display = 'inline-block';
         useLocalStorage = false;
     } else {
@@ -91,22 +63,55 @@ function saveScriptUrl() {
         showNotification('Por favor ingresa la URL del script', 'error');
         return;
     }
-    // Actualizar la constante (nota: en producción deberías recargar)
-    window.location.reload();
+    GOOGLE_SCRIPT_URL = url;
+    localStorage.setItem('googleScriptUrl', url);
+    useLocalStorage = false;
+    closeSetupModal();
+    checkConnection();
+    loadProviders();
+    showNotification('✅ Conectado exitosamente a Google Sheets', 'success');
 }
 
 function disconnectGoogle() {
+    GOOGLE_SCRIPT_URL = '';
+    localStorage.removeItem('googleScriptUrl');
     useLocalStorage = true;
     closeSetupModal();
     checkConnection();
-    showNotification(' Desconectado. Ahora usas modo local.', 'success');
+    loadProviders();
+    showNotification('🔌 Desconectado. Ahora usas modo local.', 'success');
+}
+
+// ============================================
+// MODO OSCURO/CLARO
+// ============================================
+function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        btn.textContent = '☀️ Modo Claro';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        btn.textContent = '🌙 Modo Oscuro';
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+function checkTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const btn = document.getElementById('theme-toggle');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (btn) btn.textContent = '☀️ Modo Claro';
+    }
 }
 
 // ============================================
 // CARGAR PROVEEDORES
 // ============================================
 async function loadProviders() {
-    if (useLocalStorage) {
+    if (useLocalStorage || !GOOGLE_SCRIPT_URL) {
         loadFromLocalStorage();
     } else {
         try {
@@ -168,7 +173,7 @@ function renderProviders(filteredProviders = null) {
                 </div>
                 ${p.etiqueta ? `
                     <div class="info-item">
-                        <span class="info-label">️ Etiquetas:</span>
+                        <span class="info-label">🏷️ Etiquetas:</span>
                         <div class="tags-container">
                             ${p.etiqueta.split(',').map(t => `<span class="tag">${escapeHtml(t.trim())}</span>`).join('')}
                         </div>
@@ -197,16 +202,9 @@ function renderProviders(filteredProviders = null) {
 // ABRIR WHATSAPP
 // ============================================
 function openWhatsApp(numero, nombre) {
-    // Limpiar el número (quitar espacios, guiones, paréntesis)
     const numeroLimpio = numero.replace(/[\s\-\(\)]/g, '');
-    
-    // Mensaje predefinido
     const mensaje = `Hola ${nombre}, te contacto desde el Portal de Proveedores. Me gustaría obtener más información sobre tus productos/servicios.`;
-    
-    // URL de WhatsApp
     const url = `https://wa.me/${numeroLimpio}?text=${encodeURIComponent(mensaje)}`;
-    
-    // Abrir en nueva pestaña
     window.open(url, '_blank');
 }
 
@@ -214,10 +212,7 @@ function openWhatsApp(numero, nombre) {
 // ABRIR TELÉFONO (LLAMADA)
 // ============================================
 function openPhone(numero) {
-    // Limpiar el número
     const numeroLimpio = numero.replace(/[\s\-\(\)]/g, '');
-    
-    // Abrir marcador telefónico
     window.location.href = `tel:${numeroLimpio}`;
 }
 
@@ -283,7 +278,7 @@ async function saveProvider(event) {
         descripcion: document.getElementById('prov-descripcion').value.trim()
     };
 
-    if (useLocalStorage) {
+    if (useLocalStorage || !GOOGLE_SCRIPT_URL) {
         saveToLocalStorageMode(data);
     } else {
         try {
@@ -344,7 +339,7 @@ function closeConfirmModal() {
 }
 
 async function confirmDelete() {
-    if (useLocalStorage) {
+    if (useLocalStorage || !GOOGLE_SCRIPT_URL) {
         providers = providers.filter(p => p.id !== deletingId);
         saveToLocalStorage();
         renderProviders();
