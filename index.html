@@ -11,23 +11,26 @@
 <header>
 <div class="header-content">
 <h1> Portal de Proveedores</h1>
-<button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+<div class="header-buttons">
+<button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()"> Modo Oscuro</button>
+<a href="manual.html" class="btn-manual" target="_blank">📚 Manual de Conexión</a>
+</div>
 </div>
 <p class="subtitle">Gestiona tus proveedores de forma rápida y organizada</p>
 </header>
 
 <main>
-<!-- BARRA DE CONEXIÓN -->
+<!-- BARRA DE CONEXIÓN (informativa) -->
 <div id="connection-bar" class="connection-bar">
 <div class="connection-info">
-<span class="status-icon">️</span>
-<span id="connection-status">No conectado a Google Sheets</span>
+<span class="status-icon" id="status-icon">📱</span>
+<span id="connection-status">Modo Local - Los datos se guardan en tu navegador</span>
 </div>
-<button class="btn-connect" onclick="showSetupModal()">🔗 Conectar Google Sheets</button>
+<button class="btn-connect" onclick="showSetupModal()" id="btn-connect">🔗 Conectar Google Sheets (Opcional)</button>
 </div>
 
-<!-- BARRA DE HERRAMIENTAS (oculta hasta conectar) -->
-<div class="toolbar" id="toolbar" style="display: none;">
+<!-- BARRA DE HERRAMIENTAS -->
+<div class="toolbar" id="toolbar">
 <div class="search-container">
 <input type="text" id="search-input" placeholder="🔍 Buscar por nombre, producto, descripción..." onkeyup="searchProviders()">
 </div>
@@ -47,7 +50,7 @@
 </div>
 </main>
 
-<!-- MODAL DE CONFIGURACIÓN INICIAL -->
+<!-- MODAL DE CONFIGURACIÓN (Conexión Google Sheets) -->
 <div id="modal-setup" class="modal">
 <div class="modal-content">
 <div class="modal-header">
@@ -57,12 +60,12 @@
 <div class="setup-instructions">
 <h3>📋 Instrucciones:</h3>
 <ol>
-<li>Crea una nueva hoja de cálculo en Google Sheets</li>
-<li>Ve a <strong>Extensiones → Apps Script</strong></li>
-<li>Copia el código del <strong>Paso 1</strong> de abajo</li>
-<li>Guarda y despliega como <strong>Aplicación web</strong></li>
-<li>Copia la URL y pégala en el campo de abajo</li>
+<li>Abre el archivo <strong>manual.html</strong> para ver los pasos completos</li>
+<li>Crea tu Google Sheet y Apps Script</li>
+<li>Copia la URL de tu aplicación web</li>
+<li>Pégala en el campo de abajo</li>
 </ol>
+<a href="manual.html" target="_blank" class="btn-manual-inline">📖 Ver Manual Completo</a>
 </div>
 <div class="form-group">
 <label for="script-url">URL del Script de Google:</label>
@@ -70,12 +73,8 @@
 </div>
 <div class="form-actions">
 <button class="btn-cancel" onclick="closeSetupModal()">Cancelar</button>
-<button class="btn-save" onclick="saveScriptUrl()">💾 Conectar</button>
-</div>
-<div class="code-section">
-<h4>📝 Paso 1: Copia este código en Google Apps Script:</h4>
-<pre id="script-code">// El código se insertará aquí automáticamente</pre>
-<button class="btn-copy" onclick="copyScriptCode()"> Copiar Código</button>
+<button class="btn-save" onclick="saveScriptUrl()"> Conectar</button>
+<button class="btn-disconnect" onclick="disconnectGoogle()" id="btn-disconnect" style="display:none;">🔌 Desconectar</button>
 </div>
 </div>
 </div>
