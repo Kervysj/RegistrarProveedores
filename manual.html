@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Conexión - Google Sheets</title>
+<style>
+:root {
+--bg-primary: #f4f7f6;
+--bg-secondary: #ffffff;
+--text-primary: #333333;
+--text-secondary: #6b7280;
+--primary: #3b82f6;
+--success: #10b981;
+--warning: #f59e0b;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: var(--bg-primary);
+color: var(--text-primary);
+padding: 20px;
+line-height: 1.6;
+}
+
+.container {
+max-width: 900px;
+margin: 0 auto;
+background: var(--bg-secondary);
+border-radius: 15px;
+padding: 40px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+color: var(--primary);
+text-align: center;
+margin-bottom: 10px;
+}
+
+.subtitle {
+text-align: center;
+color: var(--text-secondary);
+margin-bottom: 30px;
+}
+
+.step {
+background: #f9fafb;
+border-left: 5px solid var(--primary);
+padding: 25px;
+margin-bottom: 25px;
+border-radius: 0 10px 10px 0;
+}
+
+.step h2 {
+color: var(--primary);
+margin-top: 0;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.step-number {
+background: var(--primary);
+color: white;
+width: 35px;
+height: 35px;
+border-radius: 50%;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-weight: bold;
+}
+
+.code-block {
+background: #1f2937;
+color: #10b981;
+padding: 20px;
+border-radius: 8px;
+font-family: 'Courier New', monospace;
+font-size: 0.9rem;
+overflow-x: auto;
+margin: 15px 0;
+white-space: pre-wrap;
+word-wrap: break-word;
+}
+
+.btn-copy {
+background: var(--primary);
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+cursor: pointer;
+font-weight: bold;
+margin-top: 10px;
+}
+
+.btn-copy:hover {
+background: #2563eb;
+}
+
+.alert {
+background: #fef3c7;
+border-left: 5px solid var(--warning);
+padding: 15px;
+border-radius: 0 8px 8px 0;
+margin: 15px 0;
+}
+
+.alert-success {
+background: #d1fae5;
+border-left-color: var(--success);
+}
+
+ol, ul {
+margin-left: 20px;
+}
+
+li {
+margin-bottom: 10px;
+}
+
+.back-link {
+display: inline-block;
+margin-top: 30px;
+color: var(--primary);
+text-decoration: none;
+font-weight: bold;
+}
+
+.back-link:hover {
+text-decoration: underline;
+}
+
+.note {
+background: #dbeafe;
+border-left: 5px solid var(--primary);
+padding: 15px;
+border-radius: 0 8px 8px 0;
+margin: 15px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>📦 Manual de Conexión</h1>
+<p class="subtitle">Conecta tu Portal de Proveedores con Google Sheets</p>
+
+<div class="alert">
+<strong>ℹ️ Importante:</strong> El portal funciona perfectamente SIN Google Sheets usando almacenamiento local. Esta conexión es opcional si quieres respaldar tus datos en la nube.
+</div>
+
+<!-- PASO 1 -->
+<div class="step">
+<h2><span class="step-number">1</span> Crear Google Sheet</h2>
+<ol>
+<li>Ve a <a href="https://sheets.google.com" target="_blank">Google Sheets</a></li>
+<li>Crea una <strong>nueva hoja de cálculo en blanco</strong></li>
+<li>Nómbrala: <strong>"Proveedores"</strong></li>
+<li><strong>NO necesitas crear nada más</strong> - el script lo hará automáticamente</li>
+</ol>
+</div>
+
+<!-- PASO 2 -->
+<div class="step">
+<h2><span class="step-number">2</span> Abrir Apps Script</h2>
+<ol>
+<li>En tu Google Sheet, ve a <strong>Extensiones → Apps Script</strong></li>
+<li>Se abrirá el editor de código en una nueva pestaña</li>
+<li><strong>Borra todo</strong> el código que aparece por defecto</li>
+</ol>
+</div>
+
+<!-- PASO 3 -->
+<div class="step">
+<h2><span class="step-number">3</span> Copiar el Script</h2>
+<p>Haz clic en el botón para copiar el código completo:</p>
+<div class="code-block" id="script-code">// ============================================
+// CONFIGURACIÓN
+// ============================================
+const SHEET_NAME = 'Proveedores';
+const PASSWORD = 'Adri2712*';
+
+// ============================================
+// FUNCIÓN DE INICIALIZACIÓN - EJECUTA ESTA PRIMERO
+// ============================================
+function setup() {
+const ss = SpreadsheetApp.getActiveSpreadsheet();
+let sheet = ss.getSheetByName(SHEET_NAME);
+
+// Si no existe la hoja, crearla
+if (!sheet) {
+sheet = ss.insertSheet(SHEET_NAME);
+}
+
+// Limpiar y crear encabezados
+sheet.clear();
+sheet.getRange('A1:F1').setValues([['id', 'nombre', 'numero', 'etiqueta', 'alias', 'descripcion']]);
+sheet.getRange('A1:F1').setFontWeight('bold');
+sheet.getRange('A1:F1').setBackground('#4285f4');
+sheet.getRange('A1:F1').setFontColor('#ffffff');
+
+// Ajustar ancho de columnas
+sheet.setColumnWidth(1, 80);
+sheet.setColumnWidth(2, 200);
+sheet.setColumnWidth(3, 150);
+sheet.setColumnWidth(4, 200);
+sheet.setColumnWidth(5, 150);
+sheet.setColumnWidth(6, 400);
+
+SpreadsheetApp.getUi().alert('✅ Hoja de Proveedores creada exitosamente!');
+}
+
+// ============================================
+// FUNCIÓN PRINCIPAL - POST
+// ============================================
+function doPost(e) {
+try {
+const data = JSON.parse(e.postData.contents);
+const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+
+if (!sheet) {
+return createResponse(false, 'Hoja no encontrada. Ejecuta setup() primero.');
+}
+
+if (data.action === 'create') return createProvider(sheet, data);
+if (data.action === 'update') return updateProvider(sheet, data);
+if (data.action === 'delete') return deleteProvider(sheet, data);
+
+return createResponse(false, 'Acción no válida');
+} catch (error) {
+return createResponse(false, error.toString());
+}
+}
+
+// ============================================
+// FUNCIÓN GET - OBTENER TODOS
+// ============================================
+function doGet(e) {
+try {
+const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+
+if (!sheet) {
+return ContentService.createTextOutput(JSON.stringify({ 
+success: false, 
+error: 'Hoja no encontrada. Ejecuta setup() primero.' 
+})).setMimeType(ContentService.MimeType.JSON);
+}
+
+const data = sheet.getDataRange().getValues();
+const providers = [];
+
+// Saltar encabezados (fila 1)
+for (let i = 1; i < data.length; i++) {
+if (data[i][0]) {
+providers.push({
+id: data[i][0],
+nombre: data[i][1],
+numero: data[i][2],
+etiqueta: data[i][3],
+alias: data[i][4],
+descripcion: data[i][5]
+});
+}
+}
+
+return ContentService.createTextOutput(JSON.stringify({ 
+success: true, 
+providers: providers 
+})).setMimeType(ContentService.MimeType.JSON);
+} catch (error) {
+return ContentService.createTextOutput(JSON.stringify({ 
+success: false, 
+error: error.toString() 
+})).setMimeType(ContentService.MimeType.JSON);
+}
+}
+
+// ============================================
+// CREAR PROVEEDOR
+// ============================================
+function createProvider(sheet, data) {
+try {
+const lastRow = sheet.getLastRow();
+const newId = lastRow;
+
+sheet.appendRow([
+newId,
+data.nombre,
+data.numero,
+data.etiqueta || '',
+data.alias || '',
+data.descripcion || ''
+]);
+
+return createResponse(true, 'Proveedor creado correctamente');
+} catch (error) {
+return createResponse(false, error.toString());
+}
+}
+
+// ============================================
+// ACTUALIZAR PROVEEDOR
+// ============================================
+function updateProvider(sheet, data) {
+try {
+const id = data.id;
+const allData = sheet.getDataRange().getValues();
+
+for (let i = 1; i < allData.length; i++) {
+if (allData[i][0] === id) {
+const row = i + 1;
+sheet.getRange(row, 2).setValue(data.nombre);
+sheet.getRange(row, 3).setValue(data.numero);
+sheet.getRange(row, 4).setValue(data.etiqueta || '');
+sheet.getRange(row, 5).setValue(data.alias || '');
+sheet.getRange(row, 6).setValue(data.descripcion || '');
+return createResponse(true, 'Proveedor actualizado correctamente');
+}
+}
+
+return createResponse(false, 'Proveedor no encontrado');
+} catch (error) {
+return createResponse(false, error.toString());
+}
+}
+
+// ============================================
+// ELIMINAR PROVEEDOR
+// ============================================
+function deleteProvider(sheet, data) {
+try {
+const id = data.id;
+const allData = sheet.getDataRange().getValues();
+
+for (let i = 1; i < allData.length; i++) {
+if (allData[i][0] === id) {
+sheet.deleteRow(i + 1);
+return createResponse(true, 'Proveedor eliminado correctamente');
+}
+}
+
+return createResponse(false, 'Proveedor no encontrado');
+} catch (error) {
+return createResponse(false, error.toString());
+}
+}
+
+// ============================================
+// HELPER - CREAR RESPUESTA
+// ============================================
+function createResponse(success, message) {
+return ContentService.createTextOutput(JSON.stringify({ 
+success: success, 
+message: message 
+})).setMimeType(ContentService.MimeType.JSON);
+}</div>
+<button class="btn-copy" onclick="copyCode()">📋 Copiar Código</button>
+</div>
+
+<!-- PASO 4 -->
+<div class="step">
+<h2><span class="step-number">4</span> Ejecutar setup()</h2>
+<div class="alert">
+<strong>⚠️ Este paso es crucial:</strong> Debes ejecutar la función setup() una sola vez para crear la estructura.
+</div>
+<ol>
+<li>En el editor de Apps Script, busca la función <code>setup()</code> al inicio del código</li>
+<li>En la barra de herramientas, haz clic en el menú desplegable de funciones (dice "setup" por defecto)</li>
+<li>Selecciona <strong>"setup"</strong></li>
+<li>Haz clic en el botón <strong>"Ejecutar"</strong> (▶️)</li>
+<li><strong>Autoriza el acceso</strong> cuando Google te lo pida:
+<ul>
+<li>Selecciona tu cuenta de Google</li>
+<li>Haz clic en "Configuración avanzada"</li>
+<li>Haz clic en "Ir a (tu proyecto) (poco seguro)"</li>
+<li>Haz clic en "Permitir"</li>
+</ul>
+</li>
+<li>Verás un mensaje: <strong>"✅ Hoja de Proveedores creada exitosamente!"</strong></li>
+</ol>
+<div class="alert alert-success">
+<strong>✅ Verificación:</strong> Vuelve a tu Google Sheet y verás que se creó automáticamente una hoja llamada "Proveedores" con los encabezados.
+</div>
+</div>
+
+<!-- PASO 5 -->
+<div class="step">
+<h2><span class="step-number">5</span> Desplegar como Aplicación Web</h2>
+<ol>
+<li>Haz clic en <strong>Implementar → Nueva implementación</strong></li>
+<li>Haz clic en el <strong>engranaje ⚙️</strong> y selecciona <strong>"Aplicación web"</strong></li>
+<li>Configura:
+<ul>
+<li><strong>Descripción:</strong> "API Proveedores v1"</li>
+<li><strong>Ejecutar como:</strong> "Yo" (tu correo de Google)</li>
+<li><strong>Quién tiene acceso:</strong> <strong>"Cualquier persona"</strong> ⚠️</li>
+</ul>
+</li>
+<li>Haz clic en <strong>"Implementar"</strong></li>
+<li><strong>Autoriza</strong> nuevamente si te lo pide</li>
+<li><strong>COPIA LA URL</strong> que te da (algo como: <code>https://script.google.com/macros/s/AKfycbx.../exec</code>)</li>
+</ol>
+<div class="note">
+<strong>💡 Consejo:</strong> Guarda esta URL en un lugar seguro. La necesitarás para conectar el portal.
+</div>
+</div>
+
+<!-- PASO 6 -->
+<div class="step">
+<h2><span class="step-number">6</span> Conectar en el Portal</h2>
+<ol>
+<li>Abre tu archivo <strong>proveedores.html</strong> en el navegador</li>
+<li>Haz clic en el botón <strong>"🔗 Conectar Google Sheets"</strong></li>
+<li><strong>Pega la URL</strong> que copiaste en el paso anterior</li>
+<li>Haz clic en <strong>"💾 Conectar"</strong></li>
+<li>¡Listo! Verás un mensaje de confirmación</li>
+</ol>
+<div class="alert alert-success">
+<strong>✅ ¡Felicidades!</strong> Tu portal ahora está conectado a Google Sheets. Todos los proveedores que agregues se guardarán automáticamente en la nube.
+</div>
+</div>
+
+<!-- SOLUCIÓN DE PROBLEMAS -->
+<div class="step">
+<h2>🔧 Solución de Problemas Comunes</h2>
+<h3>❌ "Error de conexión"</h3>
+<ul>
+<li>Verifica que la URL del script sea correcta</li>
+<li>Asegúrate de haber ejecutado <code>setup()</code> primero</li>
+<li>Confirma que el acceso sea "Cualquier persona"</li>
+</ul>
+
+<h3>❌ "Hoja no encontrada"</h3>
+<ul>
+<li>Ejecuta la función <code>setup()</code> desde Apps Script</li>
+<li>Verifica que la hoja se llame exactamente "Proveedores"</li>
+</ul>
+
+<h3>❌ "Permiso denegado"</h3>
+<ul>
+<li>Autoriza correctamente el script cuando Google te lo pida</li>
+<li>Usa "Configuración avanzada" para permitir el acceso</li>
+</ul>
+
+<h3>❌ Los cambios no se reflejan</h3>
+<ul>
+<li>Recarga la página (F5 o Ctrl+R)</li>
+<li>Limpia la caché del navegador</li>
+</ul>
+</div>
+
+<!-- RESET -->
+<div class="step">
+<h2>🔄 Resetear Conexión</h2>
+<p>Si quieres desconectar Google Sheets y volver al modo local:</p>
+<ol>
+<li>Abre el portal de proveedores</li>
+<li>Abre la consola del navegador (F12)</li>
+<li>Escribe: <code>localStorage.removeItem('googleScriptUrl')</code></li>
+<li>Presiona Enter y recarga la página</li>
+</ol>
+<div class="note">
+<strong>💡 Nota:</strong> Los datos que tengas en Google Sheets se mantendrán, pero el portal usará almacenamiento local nuevamente.
+</div>
+</div>
+
+<a href="index.html" class="back-link">⬅ Volver al Portal de Proveedores</a>
+</div>
+
+<script>
+function copyCode() {
+const code = document.getElementById('script-code').textContent;
+navigator.clipboard.writeText(code).then(() => {
+alert('✅ Código copiado al portapapeles');
+}).catch(() => {
+// Fallback
+const textArea = document.createElement('textarea');
+textArea.value = code;
+document.body.appendChild(textArea);
+textArea.select();
+document.execCommand('copy');
+document.body.removeChild(textArea);
+alert('✅ Código copiado al portapapeles');
+});
+}
+</script>
+
+</body>
+</html>
