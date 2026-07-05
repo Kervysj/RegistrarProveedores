@@ -10,15 +10,24 @@
 
 <header>
 <div class="header-content">
-<h1>📦 Portal de Proveedores</h1>
+<h1> Portal de Proveedores</h1>
 <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
 </div>
 <p class="subtitle">Gestiona tus proveedores de forma rápida y organizada</p>
 </header>
 
 <main>
-<!-- BARRA DE HERRAMIENTAS -->
-<div class="toolbar">
+<!-- BARRA DE CONEXIÓN -->
+<div id="connection-bar" class="connection-bar">
+<div class="connection-info">
+<span class="status-icon">️</span>
+<span id="connection-status">No conectado a Google Sheets</span>
+</div>
+<button class="btn-connect" onclick="showSetupModal()">🔗 Conectar Google Sheets</button>
+</div>
+
+<!-- BARRA DE HERRAMIENTAS (oculta hasta conectar) -->
+<div class="toolbar" id="toolbar" style="display: none;">
 <div class="search-container">
 <input type="text" id="search-input" placeholder="🔍 Buscar por nombre, producto, descripción..." onkeyup="searchProviders()">
 </div>
@@ -37,6 +46,39 @@
 <p>Haz clic en "Agregar Proveedor" para comenzar</p>
 </div>
 </main>
+
+<!-- MODAL DE CONFIGURACIÓN INICIAL -->
+<div id="modal-setup" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h2>🔗 Conectar con Google Sheets</h2>
+<button class="btn-close" onclick="closeSetupModal()">✕</button>
+</div>
+<div class="setup-instructions">
+<h3>📋 Instrucciones:</h3>
+<ol>
+<li>Crea una nueva hoja de cálculo en Google Sheets</li>
+<li>Ve a <strong>Extensiones → Apps Script</strong></li>
+<li>Copia el código del <strong>Paso 1</strong> de abajo</li>
+<li>Guarda y despliega como <strong>Aplicación web</strong></li>
+<li>Copia la URL y pégala en el campo de abajo</li>
+</ol>
+</div>
+<div class="form-group">
+<label for="script-url">URL del Script de Google:</label>
+<input type="text" id="script-url" placeholder="https://script.google.com/macros/s/.../exec">
+</div>
+<div class="form-actions">
+<button class="btn-cancel" onclick="closeSetupModal()">Cancelar</button>
+<button class="btn-save" onclick="saveScriptUrl()">💾 Conectar</button>
+</div>
+<div class="code-section">
+<h4>📝 Paso 1: Copia este código en Google Apps Script:</h4>
+<pre id="script-code">// El código se insertará aquí automáticamente</pre>
+<button class="btn-copy" onclick="copyScriptCode()"> Copiar Código</button>
+</div>
+</div>
+</div>
 
 <!-- MODAL AGREGAR/EDITAR -->
 <div id="modal" class="modal">
