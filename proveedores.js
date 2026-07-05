@@ -1,7 +1,7 @@
 // ============================================
-// CONFIGURACIÓN - CAMBIA ESTO CON TU URL
+// CONFIGURACIÓN - CAMBIA ESTO CON TU URL DE GOOGLE SHEETS
 // ============================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/TU_ID_AQUI/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT_AQUI/exec';
 
 // ============================================
 // VARIABLES GLOBALES
@@ -252,7 +252,6 @@ return div.innerHTML;
 }
 
 function showNotification(message, type) {
-// Crear notificación
 const notif = document.createElement('div');
 notif.className = `notification ${type}`;
 notif.textContent = message;
