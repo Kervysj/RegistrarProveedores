@@ -5,63 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manual de Conexión - Google Sheets</title>
 <style>
-:root {
---bg-primary: #f4f7f6;
---bg-secondary: #ffffff;
---text-primary: #333333;
---text-secondary: #6b7280;
---primary: #3b82f6;
---success: #10b981;
---warning: #f59e0b;
-}
-
 body {
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background: var(--bg-primary);
-color: var(--text-primary);
+background: #f4f7f6;
+color: #333;
 padding: 20px;
 line-height: 1.6;
 }
-
 .container {
 max-width: 900px;
 margin: 0 auto;
-background: var(--bg-secondary);
+background: white;
 border-radius: 15px;
 padding: 40px;
 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
 h1 {
-color: var(--primary);
+color: #3b82f6;
 text-align: center;
 margin-bottom: 10px;
 }
-
 .subtitle {
 text-align: center;
-color: var(--text-secondary);
+color: #6b7280;
 margin-bottom: 30px;
 }
-
 .step {
 background: #f9fafb;
-border-left: 5px solid var(--primary);
+border-left: 5px solid #3b82f6;
 padding: 25px;
 margin-bottom: 25px;
 border-radius: 0 10px 10px 0;
 }
-
 .step h2 {
-color: var(--primary);
+color: #3b82f6;
 margin-top: 0;
 display: flex;
 align-items: center;
 gap: 10px;
 }
-
 .step-number {
-background: var(--primary);
+background: #3b82f6;
 color: white;
 width: 35px;
 height: 35px;
@@ -71,7 +55,6 @@ align-items: center;
 justify-content: center;
 font-weight: bold;
 }
-
 .code-block {
 background: #1f2937;
 color: #10b981;
@@ -84,9 +67,8 @@ margin: 15px 0;
 white-space: pre-wrap;
 word-wrap: break-word;
 }
-
 .btn-copy {
-background: var(--primary);
+background: #3b82f6;
 color: white;
 border: none;
 padding: 10px 20px;
@@ -95,47 +77,39 @@ cursor: pointer;
 font-weight: bold;
 margin-top: 10px;
 }
-
 .btn-copy:hover {
 background: #2563eb;
 }
-
 .alert {
 background: #fef3c7;
-border-left: 5px solid var(--warning);
+border-left: 5px solid #f59e0b;
 padding: 15px;
 border-radius: 0 8px 8px 0;
 margin: 15px 0;
 }
-
 .alert-success {
 background: #d1fae5;
-border-left-color: var(--success);
+border-left-color: #10b981;
 }
-
 ol, ul {
 margin-left: 20px;
 }
-
 li {
 margin-bottom: 10px;
 }
-
 .back-link {
 display: inline-block;
 margin-top: 30px;
-color: var(--primary);
+color: #3b82f6;
 text-decoration: none;
 font-weight: bold;
 }
-
 .back-link:hover {
 text-decoration: underline;
 }
-
 .note {
 background: #dbeafe;
-border-left: 5px solid var(--primary);
+border-left: 5px solid #3b82f6;
 padding: 15px;
 border-radius: 0 8px 8px 0;
 margin: 15px 0;
@@ -181,7 +155,6 @@ margin: 15px 0;
 // CONFIGURACIÓN
 // ============================================
 const SHEET_NAME = 'Proveedores';
-const PASSWORD = 'Adri2712*';
 
 // ============================================
 // FUNCIÓN DE INICIALIZACIÓN - EJECUTA ESTA PRIMERO
@@ -412,7 +385,7 @@ message: message
 <div class="step">
 <h2><span class="step-number">6</span> Conectar en el Portal</h2>
 <ol>
-<li>Abre tu archivo <strong>proveedores.html</strong> en el navegador</li>
+<li>Abre tu archivo <strong>index.html</strong> en el navegador</li>
 <li>Haz clic en el botón <strong>"🔗 Conectar Google Sheets"</strong></li>
 <li><strong>Pega la URL</strong> que copiaste en el paso anterior</li>
 <li>Haz clic en <strong>"💾 Conectar"</strong></li>
