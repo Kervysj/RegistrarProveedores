@@ -57,3 +57,31 @@ function renderProviders(filteredProviders = null) {
         </div>
     `).join('');
 }
+
+// ============================================
+// ABRIR WHATSAPP
+// ============================================
+function openWhatsApp(numero, nombre) {
+    // Limpiar el número (quitar espacios, guiones, paréntesis)
+    const numeroLimpio = numero.replace(/[\s\-\(\)]/g, '');
+    
+    // Mensaje predefinido opcional
+    const mensaje = `Hola ${nombre}, te contacto desde el Portal de Proveedores. Me gustaría obtener más información sobre tus productos/servicios.`;
+    
+    // URL de WhatsApp
+    const url = `https://wa.me/${numeroLimpio}?text=${encodeURIComponent(mensaje)}`;
+    
+    // Abrir en nueva pestaña
+    window.open(url, '_blank');
+}
+
+// ============================================
+// ABRIR TELÉFONO (LLAMADA)
+// ============================================
+function openPhone(numero) {
+    // Limpiar el número
+    const numeroLimpio = numero.replace(/[\s\-\(\)]/g, '');
+    
+    // Abrir marcador telefónico
+    window.location.href = `tel:${numeroLimpio}`;
+}
