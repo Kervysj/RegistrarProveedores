@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Proveedores</title>
+<link rel="stylesheet" href="proveedores.css">
+</head>
+<body>
+
+<header>
+<h1>📦 Portal de Proveedores</h1>
+<p class="subtitle">Gestiona tus proveedores de forma rápida y organizada</p>
+</header>
+
+<main>
+<!-- BARRA DE BÚSQUEDA Y BOTÓN AGREGAR -->
+<div class="toolbar">
+<div class="search-box">
+<input type="text" id="search-input" placeholder="🔍 Buscar proveedor (nombre, producto, descripción...)">
+</div>
+<button class="btn-add" onclick="openModal()">➕ Agregar Proveedor</button>
+</div>
+
+<!-- GRID DE TARJETAS -->
+<div id="providers-grid" class="providers-grid">
+<!-- Las tarjetas se generarán dinámicamente aquí -->
+</div>
+
+<!-- MENSAJE CUANDO NO HAY PROVEEDORES -->
+<div id="empty-message" class="empty-message" style="display: none;">
+<div class="empty-icon">📭</div>
+<h3>No hay proveedores registrados</h3>
+<p>Haz clic en "Agregar Proveedor" para comenzar</p>
+</div>
+</main>
+
+<!-- MODAL PARA AGREGAR/EDITAR -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 id="modal-title">Agregar Proveedor</h2>
+<button class="btn-close" onclick="closeModal()">✕</button>
+</div>
+<form id="provider-form" onsubmit="saveProvider(event)">
+<div class="form-group">
+<label>Nombre del Proveedor *</label>
+<input type="text" id="prov-nombre" required placeholder="Ej: Distribuidora XYZ">
+</div>
+<div class="form-group">
+<label>Número de Teléfono *</label>
+<input type="tel" id="prov-numero" required placeholder="Ej: 555-123-4567">
+</div>
+<div class="form-group">
+<label>Etiqueta / Categoría</label>
+<input type="text" id="prov-etiqueta" placeholder="Ej: Relojes, Ropa, Electrónica">
+<small>Palabras clave para identificar qué vende</small>
+</div>
+<div class="form-group">
+<label>Alias (Nombre corto)</label>
+<input type="text" id="prov-alias" placeholder="Ej: XYZ, Proveedor A">
+</div>
+<div class="form-group">
+<label>Descripción Detallada</label>
+<textarea id="prov-descripcion" rows="4" placeholder="Ej: Vende relojes de pulsera, smartwatches, accesorios. Precios mayoristas. Entrega en 24h."></textarea>
+<small>Describe qué productos vende, condiciones, etc.</small>
+</div>
+<div class="form-actions">
+<button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+<button type="submit" class="btn-save">💾 Guardar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- MODAL DE CONFIRMACIÓN PARA ELIMINAR -->
+<div id="modal-confirm" class="modal">
+<div class="modal-content modal-small">
+<h3>⚠️ Confirmar Eliminación</h3>
+<p>¿Estás seguro de que deseas eliminar este proveedor?</p>
+<p><strong id="confirm-name"></strong></p>
+<div class="form-actions">
+<button class="btn-cancel" onclick="closeConfirmModal()">Cancelar</button>
+<button class="btn-delete" onclick="confirmDelete()">🗑️ Eliminar</button>
+</div>
+</div>
+</div>
+
+<script src="proveedores.js"></script>
+</body>
+</html>
